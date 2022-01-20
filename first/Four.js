@@ -1,2 +1,2 @@
 
-const a = "你好嗄"
+const a = "masterTwo"
