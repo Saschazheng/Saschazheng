@@ -1,6 +1,1 @@
-
-<<<<<<< HEAD
-const a = "masterTwo"
-=======
-const a = "10"
->>>>>>> dev
+你说嗄
