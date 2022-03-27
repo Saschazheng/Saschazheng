@@ -1,37 +1,89 @@
 import React, { useState } from 'react';
-import { BrowserRouter,Link,Route,Routes } from "react-router-dom";
-import Index from "./Pages/Index";
-import Video from "./Pages/Video";
-import WorkPlace from "./Pages/WorkPlace";
+import './App.css';
+import { Spin,Switch, Alert , Modal, Button,Table,Pagination } from 'antd';
 
 function App() {
-  const [routeConfig,setRouteConfig] = useState([
-    {id:'1', path: '/', title: '博客首页', exact: true, component: Index },
-    {id:'2', path: '/video/', title: '视频教程', exact: false, component: Video },
-    {id:'3', path: '/workplace/', title: '职场技能', exact: false, component: WorkPlace }
-    ]);
+  const [loading,setLoading] = useState(false)
 
-    console.log(setRouteConfig);
-    
+  const toggle=()=>{
+    setLoading(value => !value);
+  }
+  const container = (
+    <Alert message="消息提示的文案"
+      description="消息提示的辅助性文字介绍消息提示的辅助性文字介绍消息提示的辅助性文字介绍"
+      type="info"
+    />
+  );
+
+  const [ visible, setVisible ] = useState(false)
+  const showModal = () =>{
+    setVisible(true)
+  };
+  const handleCancel = ()=>{
+    setVisible(false);
+  }
+  const handleOk = ()=>{
+    setLoading(true);
+    setTimeout(()=>{
+      setLoading(false);
+      setVisible(false);
+    },2000)
+  }
+
+  /* 表格 */
+  const data = [];
+  for (let i = 0; i < 100; i++) {
+    data.push({
+      key: i,
+      name: `李大嘴${i}`,
+      age: 32,
+      address: `西湖区湖底公园${i}号`,
+    });
+  };
+  
+  const columns = [{
+    title: '姓名',
+    dataIndex: 'name',
+    key: 'name',
+    width:100,
+  }, {
+    title: '年龄',
+    dataIndex: 'age',
+    key: 'age',
+    width:100,
+  }, {
+    title: '住址',
+    dataIndex: 'address',
+    key: 'address',
+  }];
+  
+
   return (
-  <BrowserRouter>
-    <div className="main_div">
-      <h3>一级导航</h3>
-      <ul>
-        {routeConfig.map((item)=>{
-         return (<li key={item.id}><Link  to={item.path}>{item.title}</Link></li>)
-        })}
-      </ul>
+    <div className="example">
+      <div>
+        <Spin spinning={loading} tip="正在读取数据...">{container}</Spin>
+        切换加载状态：<Switch checked={loading} onChange={toggle} />
+      </div>
+      <div>
+        <button onClick={showModal}>点击</button>
+        <Modal  
+        visible={visible}
+        title="对话框标题" 
+        onOk={handleOk} 
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" type="ghost" size="large" onClick={handleCancel}>返 回</Button>,
+          <Button key="submit" type="primary" size="large" loading={loading} onClick={handleOk}>
+            提 交
+          </Button>,
+        ]}
+        >
+          <p>对话框的内容</p>
+          <Table dataSource={data} columns={columns} pagination={{ pageSize: 20 }} scroll={{ y: 240 }}/>
+
+        </Modal>
+      </div>
     </div>
-    <div className="rightMain">
-      <h3>二级导航</h3>
-      <Routes>
-       {routeConfig.map((item)=>{
-          return (<Route key={item.id} path={item.path}  element={item.component} />)
-        })}
-      </Routes>
-    </div>
-  </BrowserRouter>
   );
 }
 
